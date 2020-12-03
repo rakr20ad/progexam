@@ -1,0 +1,52 @@
+<!--
+Dette er det samme som tuborgklammer <%%>
+Skriver dog også JS sprog her 
+Fejlene er i et array, så vi kører gennem array'et
+for at finde fejlene
+
+Jeg kunne også have add'et denne kode under register, 
+men skal også bruge den under login, så i stedet for 
+at skrive denne "lange" kode ind begge steder, 
+så henter jeg den i begge filer, derfor bruges partial.
+
+Add'er lidt flair til error msg. kilde: getbootstrap
+-->
+<% if (typeof errors != 'undefined') {%> 
+    <% errors.forEach(function(error){ %>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <%= error.msg %>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+   <% }); %>
+<% } %>
+
+
+<!--Noget flash (58:00 ish)-->
+<% if (success_msg != '') { %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= success_msg %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% } %>
+
+<% if (error_msg != '') { %>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <%= error_msg %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% } %>
+
+<% if (error != '') { %>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <%= error %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% } %>
