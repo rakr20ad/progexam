@@ -13,6 +13,18 @@ const UserSchema = new mongoose.Schema ({
         type: String, 
         required: true
     },
+    age: {
+        type: Number, 
+        required: true
+    },
+    Gender: {
+        type: String, 
+        required: true
+    }, 
+    prefGender: {
+        type: String, 
+        required: true
+    },
     password: {
         type: String, 
         required: true

@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const { ensureAuthenticated } = require('../config/auth');
+//Dette skal jeg bruge for at sletfunktionen virker
+
 
 //User model: det jeg snakker om i else statement
 const User = require('../models/User')
@@ -18,11 +21,17 @@ router.get('/register', (req, res) => res.render('register'));
 // via. app.use('/users', require('./routes/users'))
 //Laver en const variabel, som trækker info fra req.body (fra objektet inde i variablen)
 router.post('/register', (req, res) => {
-    const { name, email, password, password2 } = req.body; 
+    const { name, email, age, Gender, prefGender, password, password2 } = req.body; 
     let errors = []; 
 
+    /*Age: En metode vi prøvede for at validere alder. 
+    Vi brugte min. og max. i ejs i stedet for. 
+    if(age > 100 && age < 18){ 
+        errors.push({ msg: 'You need to be an adult between the age of 18-99' })
+    }*/
+
     //check required fields
-    if( !name || !email || !password || !password2){
+    if( !name || !email || !age || !Gender || !prefGender || !password || !password2){
         errors.push({ msg: 'Plz fill in all fields' })
     }
 
@@ -45,6 +54,8 @@ router.post('/register', (req, res) => {
             errors, 
             name, 
             email, 
+            Gender, 
+            prefGender,
             password, 
             password2
         }); 
@@ -64,7 +75,10 @@ router.post('/register', (req, res) => {
                 res.render('register',{
                     errors, 
                     name, 
-                    email, 
+                    email,
+                    age,
+                    Gender,
+                    prefGender, 
                     password, 
                     password2
                 }); 
@@ -75,7 +89,10 @@ router.post('/register', (req, res) => {
                 //men skal have det i vores database
                 const newUser = new User({
                     name, 
-                    email, 
+                    email,
+                    age,
+                    Gender, 
+                    prefGender, 
                     password
                 }); 
 
@@ -112,12 +129,43 @@ router.post('/login', (req, res, next) =>{
     }); 
 
 
-//logout handle (1:19:00 ish)
+//logout handle (1:19:00 ish): logout er en indbygget funktion i express
 router.get('/logout', (req, res) => {
     req.logOut(); 
     req.flash('success_msg', 'You are logged out, see you soon');
     res.redirect('/users/login');
 });
+
+// Henter jeg den bruger, som er logget ind! 
+router.get('/user', ensureAuthenticated, function (req, res) {
+    // req.user should be defined here because of the ensureAuth middleware
+    var id = req.user.id;
+  
+    User.findOne({_id: id}, function (err, user) {
+      if (err) return res.json(400, {message: `user ${id} not found.`});
+  
+      // make sure you omit sensitive user information 
+      // on this object before sending it to the client.
+      res.json(user);
+    });
+  });
+
+//Delete user
+router.delete('/delete-user/:id', ((req, res, next) => {
+    User.findByIdAndRemove(req.params.id, (error, data) => {
+        if(error) {
+            return next(error);
+        } else {
+            res.status(200).json({
+                msg: data
+            })
+            req.flash('success_msg', 'You have successfully deleted ur acc'); 
+            res.redirect('users/register')
+        }
+    })
+}))
+
+
 
 
 module.exports = router; 

@@ -29,6 +29,36 @@
               value="<%= typeof email != 'undefined' ? email : '' %>"
             />
           </div>
+          <div>
+            <label for="age">Age</label>
+            <input type="number" 
+                   id="age" 
+                   name="age" 
+                   placeholder="Age"
+                   class="form-control"
+                   min="18"
+                   max="99"
+            >
+          </div>
+          <br>
+          <div>
+            <label for="Gender">Gender</label>
+           <select name="Gender" id="Gender">
+              <option value="select">Select your gender, plz</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+          </select>
+          </div>
+          <br>
+          <div>
+            <label for="Gender">Preferred gender</label>
+            <select name="prefGender" id="prefGender">
+            <option value="select">Select preferred gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          </div>
+          <br>
           <div class="form-group">
             <label for="password">Password</label>
             <input

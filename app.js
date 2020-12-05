@@ -37,6 +37,12 @@ app.use(session({
       saveUninitialized: true
     }));
 
+/* Prøver at hente brugeren
+app.use(function (req, res, next){
+    res.locals.currentUser = req.session.userId;
+    next();
+    });*/
+
 //Passport middleware.
 //Kilde: http://www.passportjs.org/docs/authenticate/
 //Right above "sessions"
@@ -61,6 +67,10 @@ app.use((req, res, next) =>{
 //Routes 
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
+app.use('/dashboard', require('./routes/dashboard'))
+
+
+
 
 const PORT = process.env.PORT || 3500; 
 
