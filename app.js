@@ -37,8 +37,8 @@ app.use(session({
       saveUninitialized: true
     }));
 
-/* Prøver at hente brugeren
-app.use(function (req, res, next){
+// Prøver at hente brugeren
+/*app.use(function (req, res, next){
     res.locals.currentUser = req.session.userId;
     next();
     });*/

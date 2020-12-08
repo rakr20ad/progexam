@@ -137,7 +137,7 @@ router.get('/logout', (req, res) => {
 });
 
 // Henter jeg den bruger, som er logget ind! 
-router.get('/user', ensureAuthenticated, function (req, res) {
+/*router.get('/user', ensureAuthenticated, function (req, res) {
     // req.user should be defined here because of the ensureAuth middleware
     var id = req.user.id;
   
@@ -148,10 +148,11 @@ router.get('/user', ensureAuthenticated, function (req, res) {
       // on this object before sending it to the client.
       res.json(user);
     });
-  });
+  });*/
 
 //Delete user
-router.delete('/delete-user/:id', ((req, res, next) => {
+/*router.delete('/delete-user/:id', ((req, res, next) => {
+    //var id = req.user.id;
     User.findByIdAndRemove(req.params.id, (error, data) => {
         if(error) {
             return next(error);
@@ -163,10 +164,25 @@ router.delete('/delete-user/:id', ((req, res, next) => {
             res.redirect('users/register')
         }
     })
-}))
+}))*/
+
+//function deleteUser(){}
+router.delete('/profile/delete/:id', ensureAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findByIdAndRemove({
+        _id: req.params.id
+        })
+        res.send(user)
+    }catch (error){
+        console.log(error)
+        return res.sendStatus(500)
+    }
+})
+
+
 
 
 
 
 module.exports = router; 
-
+//module.exports = deleteUser; 

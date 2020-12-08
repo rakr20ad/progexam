@@ -39,5 +39,8 @@ color: black;
 <br>
 <h1 class="mt-4"> Profile information </h1>
 <p class="lead mb-3"> <%= name %> </p>
-<a href="/delete-user/:id" class="delete" type="button" method="DELETE">Delete my user NOW!</a>
+<a id="dButton" type="button" name="button" href="/profile/delete/:id" class="delete" method="DELETE">Delete my user NOW!</a>
 <a href="/users/logout" class="btn btn-secondary">Logout</a>
+
+<!--href="/profile/delete/:id" class="delete" method="DELETE"-->
+
