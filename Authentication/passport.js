@@ -4,19 +4,23 @@ const mongoose =  require('mongoose');
 const bcrypt = require('bcryptjs'); 
 
 //Load User Model 
-const User = require('../models/User'); 
+const User = require('../Model/User'); 
 
-module.exports = function(passport) {
+module.exports = (passport) => {
     passport.use(
-        new localStrategy({ usernameField: 'email' }, (email, password, done) => {
+        new localStrategy({ usernameField: 'username' }, (username, password, done) => {
             //match User 
-            User.findOne({ email: email })
+            // I min app, så er username  
+            // Derfor er ens username unikt ligesom ens email ville være
+            User.findOne({ username: username })
             .then(user => {
                 if(!user){
-                    return done(null, false, { message: 'Email is not registered' });
+                    return done(null, false, { message: 'Username is not registered' });
                 }
 
                 //Match the password 
+                // Her sørger vi for at begge passwords er ens 
+                // Dette er ikke et krav, men viser lidt flair
                 bcrypt.compare(password, user.password, (err, isMatch) =>{
                     if(err) throw err; 
 
@@ -30,8 +34,12 @@ module.exports = function(passport) {
             .catch(err => console.log(err));
         })
     );
-    //Kilde: http://www.passportjs.org/docs/authenticate/
-    //Search: "Sessions" with cmd f to find explanation
+    // Kilde: http://www.passportjs.org/docs/authenticate/
+    // Search: "Sessions" with cmd f
+    // serialization og deserialization logik er baseret på appen 
+    // Det tillader appen at vælge en tilpas objektmappe 
+    // Så den er uforstyrret af authentication lageret 
+    // En users ID er lagret og gendannet som req.user
     passport.serializeUser((user, done) => {
         done(null, user.id);
       });

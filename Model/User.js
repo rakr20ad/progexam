@@ -1,15 +1,15 @@
-//we need to create a schema 
-//of all of the different fields for our user
-//Schema er basically i stedet for class User (tror jeg)
+// Vi skal lave et skema
+// For alle kravene til en bruger
+// "Schema" er basically i stedet for class User 
 const mongoose = require('mongoose'); 
 
-//creating our schema 
+// Skemaet
 const UserSchema = new mongoose.Schema ({
     name: {
         type: String, 
         required: true
     },
-    email: {
+    username: {
         type: String, 
         required: true
     },

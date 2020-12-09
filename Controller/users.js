@@ -1,18 +1,19 @@
 const express = require('express'); 
 const router = express.Router();
+// Bcrypt benyttes til password validation
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const { ensureAuthenticated } = require('../config/auth');
+const { ensureAuthenticated } = require('../Authentication/authMiddleware');
 //Dette skal jeg bruge for at sletfunktionen virker
 
 
 //User model: det jeg snakker om i else statement
-const User = require('../models/User')
+const User = require('../Model/User')
 
-//Login page
+//Log ind side
 router.get('/login', (req, res) => res.render('login')); 
 
-//register page
+//register side
 router.get('/register', (req, res) => res.render('register')); 
 
 //Register handle
@@ -21,7 +22,7 @@ router.get('/register', (req, res) => res.render('register'));
 // via. app.use('/users', require('./routes/users'))
 //Laver en const variabel, som trækker info fra req.body (fra objektet inde i variablen)
 router.post('/register', (req, res) => {
-    const { name, email, age, Gender, prefGender, password, password2 } = req.body; 
+    const { name, username, age, Gender, prefGender, password, password2 } = req.body; 
     let errors = []; 
 
     /*Age: En metode vi prøvede for at validere alder. 
@@ -30,12 +31,15 @@ router.post('/register', (req, res) => {
         errors.push({ msg: 'You need to be an adult between the age of 18-99' })
     }*/
 
-    //check required fields
-    if( !name || !email || !age || !Gender || !prefGender || !password || !password2){
+    //tjek om kravsfelterne er opfyldt. 
+    // Her kunne man lave if statements til enhver af kravene
+    // Men man kan sagtens have alle statements i en klamme
+    // som er en hurtigere og mere effektiv måde
+    if( !name || !username || !age || !Gender || !prefGender || !password || !password2){
         errors.push({ msg: 'Plz fill in all fields' })
     }
 
-    //check passwords match 
+    //Tjek om passwords matcher 
     //Ikke et krav, men viser flair!
     if(password !== password2){
         errors.push({ msg: "Passwords are not identical" })
@@ -53,29 +57,30 @@ router.post('/register', (req, res) => {
         res.render('register',{
             errors, 
             name, 
-            email, 
+            username, 
             Gender, 
             prefGender,
             password, 
             password2
         }); 
     }else {
-//the way that mongoose works, 
-//you create a model such as user and then u have methods
-//that u can call that model, like save, find and things like that 
-//therefore we need to make bring in our model in the top. 
-//After I make the User model, I should be able to call the model
+
 //For further explanation 42:00 min in the video
-        //Validation passed
-        User.findOne({ email: email })
+//Måden mongoose virker er, at du laver en model som "user" også kalder man en metode
+//Så kan man gemme, finde ved at findIDAndRemove fx 
+//Derfor har vi modellen i toppen og efter man har lavet en model 
+//Så skulle man kunne kalde på den efterfølgende
+//bruger fx user.findOne og findbyID
+        //Validationen er enten godtaget eller nedlagt
+        User.findOne({ username: username })
         .then(user =>{
             if(user){
                 //User exists
-                errors.push({ msg: 'Email is already registered'})
+                errors.push({ msg: 'Username is already registered'})
                 res.render('register',{
                     errors, 
                     name, 
-                    email,
+                    username,
                     age,
                     Gender,
                     prefGender, 
@@ -89,7 +94,7 @@ router.post('/register', (req, res) => {
                 //men skal have det i vores database
                 const newUser = new User({
                     name, 
-                    email,
+                    username,
                     age,
                     Gender, 
                     prefGender, 
@@ -97,7 +102,11 @@ router.post('/register', (req, res) => {
                 }); 
 
                 //Hash password: yderligere forklaring om funktionen (49:00)
-                //Den krypterer det basically
+                //Den krypterer det basically ens kodeord 
+                //Som er en væsentlig del, så dem der er admin 
+                //Eller styrer serveren kan logge ind og se 
+                //Folks personlige oplysnigner, som er et brud på GDPR
+                //Ikke et krav, men viser viden uden for pensum 
                 bcrypt.genSalt(10, (err, salt) => 
                     bcrypt.hash(newUser.password, salt, (err, hash) =>{
                        if(err) throw err; 
@@ -107,7 +116,7 @@ router.post('/register', (req, res) => {
                        newUser.save()
                        .then(user => {
                            //bruger flash men mangler at display
-                        req.flash('success_msg', 'You are now registered, lets fuck!');
+                        req.flash('success_msg', 'You are now registered, lets go!');
                            res.redirect('/users/login');
                        })
                        .catch(err => console.log(err));
@@ -119,7 +128,10 @@ router.post('/register', (req, res) => {
 
 //Login Handle (1:13:00 ish)
 // Kilde: http://www.passportjs.org/docs/authenticate/
-// cmd f "custom callback"
+// cmd f "custom callback" 
+// Det her styrer log ind funktionen. 
+// Og redirecter brugeren henholdsvis, hvis brugeren 
+// Logger ind med sin respektive kode eller laver en fejl
 router.post('/login', (req, res, next) =>{
     passport.authenticate('local', {
         successRedirect: '/dashboard', 
@@ -129,7 +141,8 @@ router.post('/login', (req, res, next) =>{
     }); 
 
 
-//logout handle (1:19:00 ish): logout er en indbygget funktion i express
+// Logout handle (1:19:00 ish): logout er en indbygget funktion i express
+// Dette gør det samme som log ind bare for log ud
 router.get('/logout', (req, res) => {
     req.logOut(); 
     req.flash('success_msg', 'You are logged out, see you soon');
@@ -150,8 +163,12 @@ router.get('/logout', (req, res) => {
     });
   });*/
 
+
 //Delete user
-/*router.delete('/delete-user/:id', ((req, res, next) => {
+// Denne funktion kan slette en bruger via postman 
+// Uden held at få funktionen til at blive connected
+// til delete my user NOW knappen
+router.delete('/delete-user/:id', ((req, res, next) => {
     //var id = req.user.id;
     User.findByIdAndRemove(req.params.id, (error, data) => {
         if(error) {
@@ -164,9 +181,10 @@ router.get('/logout', (req, res) => {
             res.redirect('users/register')
         }
     })
-}))*/
+}))
 
-//function deleteUser(){}
+/*function deleteUser 
+Andet forsøg på at få delete user til at fungere via en knap
 router.delete('/profile/delete/:id', ensureAuthenticated, async (req, res) => {
     try {
         const user = await User.findByIdAndRemove({
@@ -178,7 +196,7 @@ router.delete('/profile/delete/:id', ensureAuthenticated, async (req, res) => {
         return res.sendStatus(500)
     }
 })
-
+*/
 
 
 
