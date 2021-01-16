@@ -1,9 +1,9 @@
 <header class="header2" id="header2">            
   <div class="topnav">
-      <a href="/dashboard">Home</a>
-      <a href="/dashboard/Swipe">Swipe</a>
-      <a href="/dashboard/Matches">Matches</a>
-      <a href="/dashboard/Profile">Profile</a>
+      <a href="/homepage">Home</a>
+      <a href="/homepage/likeDislike">Swipe</a>
+      <a href="/homepage/Matches">Matches</a>
+      <a href="/homepage/Profile">Profile</a>
   </div>
 <style type="text/css">    
 .topnav {
@@ -37,7 +37,6 @@ color: black;
 </header>
 <br>
 <br>
-<h1 class="mt-4"></h1>
-<p class="lead mb-3"><%= name %>'s user</p>
-<a href="#" class="btn btn-secondary">Like</a>
-<a href="#" class="btn btn-secondary">Dislike</a>
+<h1 class="mt-4">Dashboard</h1>
+<p class="lead mb-3">Welcome <%= name %></p>
+<a href="/users/logout" class="btn btn-secondary">Logout</a>

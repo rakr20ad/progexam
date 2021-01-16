@@ -10,6 +10,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 // Passport er en godkendelses-middleware for node.js 
 const passport = require('passport');
+const User = require('./Model/User');
 
 const server = express();
 
@@ -28,8 +29,6 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch(err => console.log(err)); 
 
 // EJS (Middleware)
-// Jeg bruger EJS her, fordi det er en 
-// Smart multi platform for b.la. JS, CSS og HTML
 server.use(expressLayouts); 
 server.set('view engine', 'ejs'); 
 
@@ -78,11 +77,16 @@ server.use((req, res, next) =>{
 // Dette forbinder API'et 
 server.use('/', require('./Controller/index'))
 server.use('/users', require('./Controller/users'))
-server.use('/dashboard', require('./Controller/Home'))
+server.use('/homepage', require('./Controller/index'))
 
 
+/*server.get('/profile', function(req, res){
+    User.find({}, function(err, docs){
+        if(err) res.send(err);
+        else res.render(); 
+    })
+})*/
 
-
-const PORT = process.env.PORT || 9000; 
+const PORT = process.env.PORT || 3500;
 
 server.listen(PORT, console.log(`Server started on port ${PORT}`));

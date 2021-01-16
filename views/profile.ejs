@@ -1,9 +1,9 @@
 <header class="header2" id="header2">            
   <div class="topnav">
-      <a href="/dashboard">Home</a>
-      <a href="/dashboard/Swipe">Swipe</a>
-      <a href="/dashboard/Matches">Matches</a>
-      <a href="/dashboard/Profile">Profile</a>
+      <a href="/homepage">Home</a>
+      <a href="/homepage/LikeDislike">Swipe</a>
+      <a href="/homepage/Matches">Matches</a>
+      <a href="/homepage/Profile">Profile</a>
   </div>
 <style type="text/css">    
 .topnav {
@@ -38,7 +38,19 @@ color: black;
 <br>
 <br>
 <h1 class="mt-4"> Profile information </h1>
-<p class="lead mb-3"> <%= name %> </p>
+<table width=100% id='table'>
+    <tr>
+        <th>Name:</th>
+    </tr>
+    <tr>
+      <td><%= name %></td>       
+  </tr>
+    
+</table>
+
+
+<br>
+<p class="lead mb-3">  </p>
 <a id="dButton" type="button" name="button" href="/profile/delete/:id" class="delete" method="DELETE">Delete my user NOW!</a>
 <a href="/users/logout" class="btn btn-secondary">Logout</a>
 

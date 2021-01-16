@@ -134,7 +134,7 @@ router.post('/register', (req, res) => {
 // Logger ind med sin respektive kode eller laver en fejl
 router.post('/login', (req, res, next) =>{
     passport.authenticate('local', {
-        successRedirect: '/dashboard', 
+        successRedirect: '/homepage', 
         failureRedirect: '/users/login',
         failureFlash: true
     })(req, res, next); 
@@ -183,6 +183,21 @@ router.delete('/delete-user/:id', ((req, res, next) => {
     })
 }))
 
+router.put('/update-user/:id', ((req, res, next) => {
+    //var id = req.user.id;
+    User.findByIdAndRemove(req.params.id, (error, data) => {
+        if(error) {
+            return next(error);
+        } else {
+            res.status(200).json({
+                msg: data
+            })
+            req.flash('success_msg', 'You have successfully updated ur acc'); 
+            res.redirect('users/profile')
+        }
+    })
+}))
+
 /*function deleteUser 
 Andet forsøg på at få delete user til at fungere via en knap
 router.delete('/profile/delete/:id', ensureAuthenticated, async (req, res) => {
@@ -198,7 +213,12 @@ router.delete('/profile/delete/:id', ensureAuthenticated, async (req, res) => {
 })
 */
 
-
+router.get('/profile', function(req, res){
+    User.find({}, function(err, docs){
+        if(err) res.send(err);
+        else res.render(); 
+    })
+})
 
 
 
