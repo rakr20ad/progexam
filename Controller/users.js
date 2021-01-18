@@ -19,11 +19,12 @@ router.get('/register', (req, res) => res.render('register'));
 //Register handle
 //handling a post request
 //Det gør vi sådan her, da vi har connected users til app.js
-// via. app.use('/users', require('./routes/users'))
+// via. server.use('/users', require('./routes/users'))
 //Laver en const variabel, som trækker info fra req.body (fra objektet inde i variablen)
 router.post('/register', (req, res) => {
     const { name, username, age, Gender, prefGender, password, password2 } = req.body; 
     let errors = []; 
+    console.log(req.body)
 
     /*Age: En metode vi prøvede for at validere alder. 
     Vi brugte min. og max. i ejs i stedet for. 
@@ -65,7 +66,7 @@ router.post('/register', (req, res) => {
         }); 
     }else {
 
-//For further explanation 42:00 min in the video
+
 //Måden mongoose virker er, at du laver en model som "user" også kalder man en metode
 //Så kan man gemme, finde ved at findIDAndRemove fx 
 //Derfor har vi modellen i toppen og efter man har lavet en model 
@@ -101,7 +102,7 @@ router.post('/register', (req, res) => {
                     password
                 }); 
 
-                //Hash password: yderligere forklaring om funktionen (49:00)
+                //Hash password: 
                 //Den krypterer det basically ens kodeord 
                 //Som er en væsentlig del, så dem der er admin 
                 //Eller styrer serveren kan logge ind og se 
@@ -115,7 +116,6 @@ router.post('/register', (req, res) => {
                         //save new user
                        newUser.save()
                        .then(user => {
-                           //bruger flash men mangler at display
                         req.flash('success_msg', 'You are now registered, lets go!');
                            res.redirect('/users/login');
                        })
@@ -185,7 +185,7 @@ router.delete('/delete-user/:id', ((req, res, next) => {
 
 router.put('/update-user/:id', ((req, res, next) => {
     //var id = req.user.id;
-    User.findByIdAndRemove(req.params.id, (error, data) => {
+    User.findByIdAndUpdate(req.params.id, (error, data) => {
         if(error) {
             return next(error);
         } else {

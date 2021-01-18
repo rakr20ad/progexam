@@ -10,7 +10,7 @@ const { ensureAuthenticated } = require('../Authentication/authMiddleware');
 router.get('/', function(req, res){
     res.render('Welcome')
 })
-//Dashboard 
+//Homepage 
 router.get('/homepage', ensureAuthenticated, function(req, res){  
     res.render('homepage', {
         name: req.user.name
