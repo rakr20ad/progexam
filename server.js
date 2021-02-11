@@ -12,7 +12,7 @@ const session = require('express-session');
 const passport = require('passport');
 const User = require('./Model/User');
 
-const server = express();
+const server = express()
 
 // Passport 
 require('./Authentication/passport')(passport); 
@@ -24,8 +24,8 @@ const db = require('./Authentication/Database').MongoURI;
 // Forbinder til to mongoDB og heraf benyttes mongoose 
 // Her skal man huske at tilføje "useUnifiedTopology: true"
 // Indeni tuborgklammerne, ellers brokker den sig
-mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true }) 
-    .then(() => console.log('MongoDB connected...'))
+mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true}) 
+    .then(() => console.log('Database is connected...'))
     .catch(err => console.log(err)); 
 
 // EJS (Middleware)

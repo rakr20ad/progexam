@@ -3,8 +3,7 @@ const router = express.Router();
 // Bcrypt benyttes til password validation
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const { ensureAuthenticated } = require('../Authentication/authMiddleware');
-//Dette skal jeg bruge for at sletfunktionen virker
+
 
 
 //User model: det jeg snakker om i else statement
@@ -24,7 +23,7 @@ router.get('/register', (req, res) => res.render('register'));
 router.post('/register', (req, res) => {
     const { name, username, age, Gender, prefGender, password, password2 } = req.body; 
     let errors = []; 
-    console.log(req.body)
+    //console.log(req.body)
 
     /*Age: En metode vi prøvede for at validere alder. 
     Vi brugte min. og max. i ejs i stedet for. 
@@ -89,8 +88,6 @@ router.post('/register', (req, res) => {
                     password2
                 }); 
             } else {
-                //Gør det kortere: behøver ikke sige fx name: name
-                //da vi allerede har gjort det
                 //Vi kan lave users og få det i vores terminal,
                 //men skal have det i vores database
                 const newUser = new User({
@@ -101,13 +98,12 @@ router.post('/register', (req, res) => {
                     prefGender, 
                     password
                 }); 
-
+                console.log(new User)
                 //Hash password: 
                 //Den krypterer det basically ens kodeord 
                 //Som er en væsentlig del, så dem der er admin 
                 //Eller styrer serveren kan logge ind og se 
                 //Folks personlige oplysnigner, som er et brud på GDPR
-                //Ikke et krav, men viser viden uden for pensum 
                 bcrypt.genSalt(10, (err, salt) => 
                     bcrypt.hash(newUser.password, salt, (err, hash) =>{
                        if(err) throw err; 
