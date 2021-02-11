@@ -1,6 +1,4 @@
-// Vi skal lave et skema
-// For alle kravene til en bruger
-// "Schema" er basically i stedet for class User 
+// Henter mongoose til schema
 const mongoose = require('mongoose'); 
 
 // Skemaet

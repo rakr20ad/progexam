@@ -17,9 +17,6 @@ router.get('/homepage', ensureAuthenticated, function(req, res){
     })});
 
 //Routes fra homepage til de andre subsider + beskyttelse
-//Kunne have benyttet mig af JWT-tokens, men dette er nemmere
-// Her bruger jeg "function" og ikke => for at vise at 
-// det kan gøre på begge måder
 router.get('/likeDislike', ensureAuthenticated, function(req, res){  
     res.render('likeDislike', {
         name: req.user.name

@@ -19,7 +19,6 @@ router.get('/register', (req, res) => res.render('register'));
 //handling a post request
 //Det gør vi sådan her, da vi har connected users til app.js
 // via. server.use('/users', require('./routes/users'))
-//Laver en const variabel, som trækker info fra req.body (fra objektet inde i variablen)
 router.post('/register', (req, res) => {
     const { name, username, age, Gender, prefGender, password, password2 } = req.body; 
     let errors = []; 
@@ -32,9 +31,6 @@ router.post('/register', (req, res) => {
     }*/
 
     //tjek om kravsfelterne er opfyldt. 
-    // Her kunne man lave if statements til enhver af kravene
-    // Men man kan sagtens have alle statements i en klamme
-    // som er en hurtigere og mere effektiv måde
     if( !name || !username || !age || !Gender || !prefGender || !password || !password2){
         errors.push({ msg: 'Plz fill in all fields' })
     }
@@ -51,8 +47,6 @@ router.post('/register', (req, res) => {
     }
     //Vi gør dette, da hvis der er noget galt med 
     // nogle af info, så skal info ikke bare forsvinde
-    //men vise hvor fejlen er (som jeg forstår det, eller se video omkring 34:29)
-    // pga koden inde i register
     if(errors.length > 0){
         res.render('register',{
             errors, 
@@ -101,9 +95,6 @@ router.post('/register', (req, res) => {
                 console.log(new User)
                 //Hash password: 
                 //Den krypterer det basically ens kodeord 
-                //Som er en væsentlig del, så dem der er admin 
-                //Eller styrer serveren kan logge ind og se 
-                //Folks personlige oplysnigner, som er et brud på GDPR
                 bcrypt.genSalt(10, (err, salt) => 
                     bcrypt.hash(newUser.password, salt, (err, hash) =>{
                        if(err) throw err; 
@@ -122,9 +113,7 @@ router.post('/register', (req, res) => {
     }
 }); 
 
-//Login Handle (1:13:00 ish)
-// Kilde: http://www.passportjs.org/docs/authenticate/
-// cmd f "custom callback" 
+// Login Handle 
 // Det her styrer log ind funktionen. 
 // Og redirecter brugeren henholdsvis, hvis brugeren 
 // Logger ind med sin respektive kode eller laver en fejl
@@ -137,7 +126,7 @@ router.post('/login', (req, res, next) =>{
     }); 
 
 
-// Logout handle (1:19:00 ish): logout er en indbygget funktion i express
+// Logout handle: logout er en indbygget funktion i express
 // Dette gør det samme som log ind bare for log ud
 router.get('/logout', (req, res) => {
     req.logOut(); 
@@ -145,25 +134,8 @@ router.get('/logout', (req, res) => {
     res.redirect('/users/login');
 });
 
-// Henter jeg den bruger, som er logget ind! 
-/*router.get('/user', ensureAuthenticated, function (req, res) {
-    // req.user should be defined here because of the ensureAuth middleware
-    var id = req.user.id;
-  
-    User.findOne({_id: id}, function (err, user) {
-      if (err) return res.json(400, {message: `user ${id} not found.`});
-  
-      // make sure you omit sensitive user information 
-      // on this object before sending it to the client.
-      res.json(user);
-    });
-  });*/
-
 
 //Delete user
-// Denne funktion kan slette en bruger via postman 
-// Uden held at få funktionen til at blive connected
-// til delete my user NOW knappen
 router.delete('/delete-user/:id', ((req, res, next) => {
     //var id = req.user.id;
     User.findByIdAndRemove(req.params.id, (error, data) => {
@@ -179,6 +151,7 @@ router.delete('/delete-user/:id', ((req, res, next) => {
     })
 }))
 
+// Update user
 router.put('/update-user/:id', ((req, res, next) => {
     //var id = req.user.id;
     User.findByIdAndUpdate(req.params.id, (error, data) => {
@@ -209,14 +182,6 @@ router.delete('/profile/delete/:id', ensureAuthenticated, async (req, res) => {
 })
 */
 
-router.get('/profile', function(req, res){
-    User.find({}, function(err, docs){
-        if(err) res.send(err);
-        else res.render(); 
-    })
-})
-
-
 
 module.exports = router; 
-//module.exports = deleteUser; 
+

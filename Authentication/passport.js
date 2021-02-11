@@ -1,4 +1,4 @@
-//Further explanation (1:00:00)
+
 const localStrategy = require('passport-local').Strategy;
 const mongoose =  require('mongoose'); 
 const bcrypt = require('bcryptjs'); 
@@ -34,8 +34,6 @@ module.exports = (passport) => {
             .catch(err => console.log(err));
         })
     );
-    // Kilde: http://www.passportjs.org/docs/authenticate/
-    // Search: "Sessions" with cmd f
     // serialization og deserialization logik er baseret på appen 
     // Det tillader appen at vælge en tilpas objektmappe 
     // Så den er uforstyrret af authentication lageret 
