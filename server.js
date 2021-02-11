@@ -10,7 +10,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 // Passport er en godkendelses-middleware for node.js 
 const passport = require('passport');
-const User = require('./Model/User');
+
 
 const server = express()
 
